@@ -1,0 +1,141 @@
+body {
+  background-color: #141b22;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  overflow-y: scroll;
+  font-size: 16px;
+}
+
+.navbar {
+  background-color: #333;
+}
+
+.navbar-brand {
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+  color: #fff;
+  font-size: 18px;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #007bff;
+}
+
+#surprise-container {
+  margin-top: 50px;
+  text-align: center;
+  padding: 20px;
+}
+
+.gif-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.gif-container iframe {
+  border: none;
+  width: 300px;
+  height: 300px;
+  border-radius: 10px;
+}
+
+.button-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-custom {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: #0056b3;
+}
+
+.clock-card {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+#datetime {
+  font-size: 36px;
+  font-family: "Digital", sans-serif;
+  color: #fff;
+  margin: 0;
+}
+
+#date {
+  font-size: 20px;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .gif-container iframe {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+@media (max-width: 576px) {
+  .clock-card {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  #datetime {
+    font-size: 28px;
+  }
+
+  #date {
+    font-size: 18px;
+  }
+
+  .btn-custom {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
+
+/* Improved Navbar Styles */
+.navbar-toggler {
+  border: none;
+  outline: none;
+}
+
+.navbar-toggler-icon {
+  background-color: #fff; /* Change color of the toggler icon */
+}
+
+.navbar-collapse {
+  justify-content: flex-end; /* Align links to the right */
+}
+
+.navbar-nav .nav-item {
+  margin-right: 10px; /* Adjust spacing between nav items */
+}
+
+@media (max-width: 768px) {
+  .navbar-nav .nav-item {
+    margin-right: 0;
+    margin-bottom: 10px; /* Add margin below each nav item */
+  }
+}

