@@ -1,0 +1,54 @@
+# Ignore everything in the vendor directory
+/vendor/*
+
+# Sensitive configuration files
+/config/app.php
+
+# Cache files
+/tmp/cache/models/*
+!/tmp/cache/models/empty
+/tmp/cache/persistent/*
+!/tmp/cache/persistent/empty
+/tmp/cache/views/*
+!/tmp/cache/views/empty
+
+# Sessions, tests, and other temporary files
+/tmp/sessions/*
+!/tmp/sessions/empty
+/tmp/tests/*
+!/tmp/tests/empty
+
+# Log files
+/logs/*
+!/logs/empty
+
+# Dynamic files specific to CyberSentinel
+location.txt
+snapshots/
+
+# Ignore system files
+*.log
+*.tmp
+*.bak
+*.swp
+Thumbs.db
+.DS_Store
+
+# Ignore IDE/editor configuration files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Exclude Node.js dependencies if applicable
+node_modules/
+
+# Exclude Composer dependencies if applicable
+vendor/
+
+# OS-specific files
+*.lock
+*.pid
+
+# Git-specific files
+.git/
