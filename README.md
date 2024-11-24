@@ -27,7 +27,7 @@ For ethical concerns or to report misuse, please contact:
 
 ## 📸 Live Preview  
 
-👉 [**Experience CyberSentinel Now**](https://devdas-gupta.github.io/CyberSentinel/
+👉 [**Experience CyberSentinel Now**](https://devdasgupta.in/test/
 )  
 
 > **Note**: Please enable browser permissions for location and camera access to unlock the full experience.
